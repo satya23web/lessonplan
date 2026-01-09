@@ -258,23 +258,3 @@ if "generated_plan" in st.session_state:
                         st.error(f"Refinement failed: {e}")
 
 # 3. RUN WITH NGROK
-import os
-from pyngrok import ngrok
-
-# --- PASTE NGROK TOKEN HERE ---
-ngrok_token = "PASTE_YOUR_NGROK_TOKEN_HERE" 
-# ------------------------------
-
-if "PASTE" in ngrok_token:
-    print("❌ STOP: You forgot to paste your Ngrok Token!")
-else:
-    ngrok.set_auth_token(ngrok_token)
-    ngrok.kill()
-    os.system("streamlit run app.py &")
-    try:
-        url = ngrok.connect(8501).public_url
-        print("--------------------------------------------------")
-        print(f"✅ CLICK THIS LINK: {url}")
-        print("--------------------------------------------------")
-    except Exception as e:
-        print(f"Ngrok Error: {e}")
