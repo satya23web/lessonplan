@@ -6,7 +6,7 @@ import os
 import datetime
 
 # --- CONFIGURATION ---
-st.set_page_config(page_title="Teacher's Genius Planner", layout="wide")
+st.set_page_config(page_title="Lesson plan generator", layout="wide")
 
 # 🔴 HARDCODED API KEY (Hidden from User)
 # Replace this with your working key inside the code only.
@@ -72,7 +72,7 @@ with st.sidebar:
         # 1. Buy Me A Coffee Button
         st.markdown(
             """
-            <a href="https://www.buymeacoffee.com" target="_blank">
+            <a href="https://www.buymeacoffee.com/scarlet25" target="_blank">
                 <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 50px !important;width: 200px !important;" >
             </a>
             """,
@@ -282,7 +282,7 @@ if "generated_plan" in st.session_state:
     
     col_ref1, col_ref2 = st.columns([4, 1])
     with col_ref1:
-        refine_instruction = st.text_input("Instruction", placeholder="e.g., Change the Explore activity to use a YouTube video instead.")
+        refine_instruction = st.text_input("Instruction", placeholder="e.g., Change the Explore activity to divide students in more group.")
     with col_ref2:
         st.write("") 
         st.write("") 
