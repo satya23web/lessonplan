@@ -31,7 +31,6 @@ def save_to_history(plan_data):
 def delete_plan(timestamp):
     """Deletes a plan based on its unique timestamp"""
     history = load_history()
-    # Keep only items that DO NOT match the timestamp
     new_history = [item for item in history if item.get("timestamp") != timestamp]
     with open(DB_FILE, "w") as f:
         json.dump(new_history, f, indent=4)
@@ -68,7 +67,7 @@ with st.sidebar:
     
     # ❤️ DONATION SECTION
     with st.expander("❤️ Support the Developer", expanded=True):
-        st.markdown("If this saved you time, you can support me here:")
+        st.markdown("It costs me money to manage it. Your little help will help me a lot.")
         
         # 1. Buy Me A Coffee Button
         st.markdown(
@@ -99,7 +98,6 @@ with st.sidebar:
         st.info("No plans yet.")
     else:
         for item in history:
-            # NAME: Subject - Lesson Plan #Number
             label = f"{item['subject']} - LP #{item['lp_number']}"
             
             with st.expander(label):
@@ -137,12 +135,18 @@ with col3:
 col4, col5 = st.columns(2)
 with col4:
     tlm = st.text_input("TLM Materials", "Charts, Flashcards")
-    model_type = st.selectbox("Model", ["5E Model", "ICON Model"])
+    # Added UDL Model (Coming Soon) option
+    model_type = st.selectbox("Model", ["5E Model", "ICON Model", "UDL Model (Coming Soon)"])
 with col5:
     methods = st.text_input("Method", "Constructivist Approach")
     strategies = st.text_input("Strategy", "Collaborative Learning")
 
 st.markdown("---")
+
+# --- CHECK FOR COMING SOON ---
+if model_type == "UDL Model (Coming Soon)":
+    st.info("🚧 **UDL Model is currently under development.** Please check back later for updates!")
+    st.stop() # Stops the code here so the button below doesn't run
 
 # --- GENERATE BUTTON ---
 if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
@@ -161,7 +165,7 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             **INSTRUCTIONS:**
             1. Write in FIRST PERSON ("I will...").
             2. Use a CLEAN MARKDOWN TABLE for phases.
-            3. **CRITICAL:** Do NOT use standard newlines (\\n) inside the table cells. Use HTML `<br>` tags for line breaks inside the table.
+            3. **CRITICAL:** Do NOT use standard newlines (\\n) inside the table cells. Use HTML `<br>` tags for line breaks inside the table cells so the table stays perfect.
             4. "Evaluate" phase must have 3 numbered questions.
             
             **OUTPUT FORMAT:**
@@ -181,10 +185,9 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             | **Evaluate** | [Detail] | [Outcome] |
 
             ---
-            *This costs me money to manage AI. A little donation would be a great help. To donate, click on the left side button on top of the page.*
+            *It costs me money to manage it your litttle help will help me a lot to donate click 0on left donate again*
             """
-        else:
-            # --- CUSTOM ICON PROMPT (Updated per your instructions) ---
+        elif model_type == "ICON Model":
             prompt = f"""
             Act as an expert student teacher. Create an ICON Model Lesson Plan based on the EXACT steps below.
             
@@ -247,7 +250,7 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             | **8. Application**<br>[Teacher gives specific questions to solve... details] | [Specific Outcome] |
 
             ---
-            *This costs me money to manage AI. A little donation would be a great help. To donate, click on the left side button on top of the page.*
+            *It costs me money to manage it your litttle help will help me a lot to donate click on left top button to donate *
             """
         
         try:
