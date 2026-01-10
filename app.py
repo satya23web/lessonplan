@@ -67,7 +67,7 @@ with st.sidebar:
     
     # ❤️ DONATION SECTION
     with st.expander("❤️ Support the Developer", expanded=True):
-        st.markdown("It costs me money to manage it. Your little help will help me a lot.")
+        st.markdown("If it truly saved your time feel free to donate.")
         
         # 1. Buy Me A Coffee Button
         st.markdown(
@@ -177,8 +177,8 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             | **Topic** | {topic} | **Duration** | {period} |
             | **TLM** | {tlm} | **Model** | 5E Model |
             
-            **Method:** {methods} 
-            **Strategy:** {strategies}
+            ###**Method:** {methods} 
+            ###**Strategy:** {strategies}
             
             ---
             
