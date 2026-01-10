@@ -67,7 +67,7 @@ with st.sidebar:
     
     # ❤️ DONATION SECTION
     with st.expander("❤️ Support the Developer", expanded=True):
-        st.markdown("If it truly saved your time feel free to donate")
+        st.markdown("It costs me money to manage it. Your little help will help me a lot.")
         
         # 1. Buy Me A Coffee Button
         st.markdown(
@@ -177,7 +177,8 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             | **Topic** | {topic} | **Duration** | {period} |
             | **TLM** | {tlm} | **Model** | 5E Model |
             
-            **Method:** {methods} | **Strategy:** {strategies}
+            **Method:** {methods} 
+            **Strategy:** {strategies}
             
             ---
             
@@ -262,7 +263,8 @@ if "generated_plan" in st.session_state:
     st.markdown("---")
     st.success("✅ Plan Generated Successfully!")
     
-    # 1. DISPLAY PLAN (With HTML enabled for <br> tags)
+    # 1. DISPLAY PLAN (Forcing HTML interpretation for tables)
+    # The 'unsafe_allow_html' is critical here to render <br> tags in tables
     st.markdown(st.session_state.generated_plan, unsafe_allow_html=True)
     
     # 2. CUSTOMIZATION TOOL
