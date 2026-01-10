@@ -1,3 +1,4 @@
+
 import streamlit as st
 import google.generativeai as genai
 import json
@@ -8,6 +9,7 @@ import datetime
 st.set_page_config(page_title="Teacher's Genius Planner", layout="wide")
 
 # 🔴 HARDCODED API KEY (Hidden from User)
+# Replace this with your working key inside the code only.
 HIDDEN_API_KEY = st.secrets["GOOGLE_API_KEY"]
 
 # --- DATABASE ---
@@ -40,7 +42,7 @@ def try_generate_content(prompt):
         raise Exception("API Key is missing in the code!")
         
     genai.configure(api_key=HIDDEN_API_KEY)
-    model_list = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-pro"]
+    model_list = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-pro"]
     
     last_error = ""
     for model_name in model_list:
@@ -71,7 +73,7 @@ with st.sidebar:
         # 1. Buy Me A Coffee Button
         st.markdown(
             """
-            <a href="https://www.buymeacoffee.com/scarlet25" target="_blank">
+            <a href="https://www.buymeacoffee.com" target="_blank">
                 <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 50px !important;width: 200px !important;" >
             </a>
             """,
@@ -82,7 +84,6 @@ with st.sidebar:
         
         # 2. UPI Copy Option
         st.write("**Or via UPI:**")
-        # st.code automatically adds a 'copy' button on hover
         st.code("kumarsatya75045-3@okhdfcbank", language="text")
         
         if st.button("I sent a donation! 🎉"):
@@ -178,17 +179,54 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             | **Explain** | [Detail] | [Outcome] |
             | **Elaborate** | [Detail] | [Outcome] |
             | **Evaluate** | [Detail] | [Outcome] |
+
+            ---
+            *This costs me money to manage AI. A little donation would be a great help. To donate, click on the left side button on top of the page.*
             """
         else:
+            # --- CUSTOM ICON PROMPT (Updated per your instructions) ---
             prompt = f"""
-            Act as an expert student teacher. Create an ICON Model Lesson Plan.
-            Context: Teacher: {student_name}, LP #{lp_number}, Subject: {subject}, Topic: {topic}.
+            Act as an expert student teacher. Create an ICON Model Lesson Plan based on the EXACT steps below.
+            
+            **CONTEXT:**
+            Teacher: {student_name}, LP #{lp_number}, Subject: {subject}, Topic: {topic}.
+            Class: {class_name}, Period: {period}, TLM: {tlm}.
             
             **INSTRUCTIONS:**
-            1. Follow ICON steps.
-            2. Use a MARKDOWN TABLE.
-            3. **CRITICAL:** Use HTML `<br>` tags for line breaks inside table cells to keep the table structure intact.
+            1. Use a MARKDOWN TABLE with 2 columns: "ICON Phase & Activity" on the left, "Learning Outcome" on the right.
+            2. **CRITICAL:** Use HTML `<br>` tags for line breaks inside table cells. Do NOT use normal newlines inside the table.
+            3. Follow these exact 8 phases in order:
+
+            **Phase 1: Authentic Observation**
+            - Teacher divides students into two groups.
+            - Provide them with a learning situation (related to {topic}).
             
+            **Phase 2: Interpretation Construction**
+            - Student teacher assigns activity to each group based on the result/outcome of the learning situation.
+            
+            **Phase 3: Contextualization**
+            - Students relate their observation of the previous learning situation with following aspects of text.
+            - Student teacher guides them and provides hints in case they need it.
+            
+            **Phase 4: Cognitive Apprenticeship**
+            - Student teacher guides the student to alter their observation, interpretation, and conceptualization.
+            - Students re-analyze the concepts they have learned by interpreting new knowledge.
+            - Student teacher asks simple questions to students expressing some real-life scenarios.
+            
+            **Phase 5: Collaboration**
+            - Student teacher divides the entire class into two groups.
+            - Provide them with their respective apparatus and ask them to do their respective activities.
+            
+            **Phase 6: Multiple Interpretation**
+            - Student teacher asks specific questions to each of the groups that are performing the activity and observation.
+            
+            **Phase 7: Multiple Manifestation**
+            - Students summarize the different interpretations about what they have revealed.
+            - Student teacher assists the learners.
+            
+            **Phase 8: Application**
+            - Student teacher gives students specific questions to solve related to the topic.
+
             **OUTPUT FORMAT:**
             ## {subject} Lesson Plan #{lp_number}
             **Topic:** {topic}
@@ -197,10 +235,19 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             [List Outcomes]
             
             ### ICON Process:
-            | Step | Activity | Outcome |
-            | :--- | :--- | :--- |
-            | **Observation** | [Detail] | [Outcome] |
-            ... (All steps)
+            | ICON Phase & Activity | Learning Outcome |
+            | :--- | :--- |
+            | **1. Authentic Observation**<br>[Teacher divides class into two groups... details based on {topic}] | [Specific Outcome] |
+            | **2. Interpretation Construction**<br>[Teacher assigns activity based on results... details] | [Specific Outcome] |
+            | **3. Contextualization**<br>[Students relate observation to text... Teacher guides... details] | [Specific Outcome] |
+            | **4. Cognitive Apprenticeship**<br>[Teacher guides students to alter observation... Students re-analyze... Teacher asks real-life scenario questions] | [Specific Outcome] |
+            | **5. Collaboration**<br>[Teacher divides class into two groups... provides apparatus... details] | [Specific Outcome] |
+            | **6. Multiple Interpretation**<br>[Teacher asks questions to groups performing activity... details] | [Specific Outcome] |
+            | **7. Multiple Manifestation**<br>[Students summarize interpretations... Teacher assists... details] | [Specific Outcome] |
+            | **8. Application**<br>[Teacher gives specific questions to solve... details] | [Specific Outcome] |
+
+            ---
+            *This costs me money to manage AI. A little donation would be a great help. To donate, click on the left side button on top of the page.*
             """
         
         try:
@@ -257,4 +304,3 @@ if "generated_plan" in st.session_state:
                     except Exception as e:
                         st.error(f"Refinement failed: {e}")
 
-# 3. RUN WITH NGROK
