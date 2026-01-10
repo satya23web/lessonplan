@@ -1,4 +1,3 @@
-
 import streamlit as st
 import google.generativeai as genai
 import json
@@ -6,11 +5,15 @@ import os
 import datetime
 
 # --- CONFIGURATION ---
-st.set_page_config(page_title="Lesson plan generator", layout="wide")
+st.set_page_config(page_title="Teacher's Genius Planner", layout="wide")
 
-# 🔴 HARDCODED API KEY (Hidden from User)
-# Replace this with your working key inside the code only.
-HIDDEN_API_KEY = st.secrets["GOOGLE_API_KEY"]
+# 🔴 SECRETS API KEY (For Streamlit Cloud)
+# Make sure you add GOOGLE_API_KEY to your Streamlit Secrets!
+if "GOOGLE_API_KEY" in st.secrets:
+    HIDDEN_API_KEY = st.secrets["GOOGLE_API_KEY"]
+else:
+    st.error("❌ API Key missing in Secrets. Please add GOOGLE_API_KEY in Streamlit Settings.")
+    st.stop()
 
 # --- DATABASE ---
 DB_FILE = "lesson_history.json"
@@ -31,6 +34,7 @@ def save_to_history(plan_data):
 def delete_plan(timestamp):
     """Deletes a plan based on its unique timestamp"""
     history = load_history()
+    # Keep only items that DO NOT match the timestamp
     new_history = [item for item in history if item.get("timestamp") != timestamp]
     with open(DB_FILE, "w") as f:
         json.dump(new_history, f, indent=4)
@@ -38,7 +42,7 @@ def delete_plan(timestamp):
 # --- MODEL FUNCTION ---
 def try_generate_content(prompt):
     if not HIDDEN_API_KEY:
-        raise Exception("API Key is missing in the code!")
+        raise Exception("API Key is missing!")
         
     genai.configure(api_key=HIDDEN_API_KEY)
     model_list = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-pro"]
@@ -58,10 +62,8 @@ def try_generate_content(prompt):
 with st.sidebar:
     st.header("⚙️ Settings")
     
-    if HIDDEN_API_KEY and "AIza" in HIDDEN_API_KEY:
+    if HIDDEN_API_KEY:
         st.success("✅ API System: Active")
-    else:
-        st.error("❌ API Key Missing!")
     
     st.markdown("---")
     
@@ -146,7 +148,7 @@ st.markdown("---")
 # --- CHECK FOR COMING SOON ---
 if model_type == "UDL Model (Coming Soon)":
     st.info("🚧 **UDL Model is currently under development.** Please check back later for updates!")
-    st.stop() # Stops the code here so the button below doesn't run
+    st.stop()
 
 # --- GENERATE BUTTON ---
 if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
@@ -185,7 +187,7 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             | **Evaluate** | [Detail] | [Outcome] |
 
             ---
-            *It costs me money to manage it your litttle help will help me a lot to donate click 0on left donate again*
+            *It costs me money to manage it your litttle help will help me a lot to donate click on left top button to donate*
             """
         elif model_type == "ICON Model":
             prompt = f"""
@@ -250,7 +252,7 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             | **8. Application**<br>[Teacher gives specific questions to solve... details] | [Specific Outcome] |
 
             ---
-            *It costs me money to manage it your litttle help will help me a lot to donate click on left top button to donate *
+            *It costs me money to manage it your litttle help will help me a lot to donate click on left top button to donate*
             """
         
         try:
@@ -282,7 +284,7 @@ if "generated_plan" in st.session_state:
     
     col_ref1, col_ref2 = st.columns([4, 1])
     with col_ref1:
-        refine_instruction = st.text_input("Instruction", placeholder="e.g., Change the Explore activity to divide students in more group.")
+        refine_instruction = st.text_input("Instruction", placeholder="e.g., Change the Explore activity to use a YouTube video instead.")
     with col_ref2:
         st.write("") 
         st.write("") 
@@ -306,7 +308,6 @@ if "generated_plan" in st.session_state:
                         st.rerun()
                     except Exception as e:
                         st.error(f"Refinement failed: {e}")
-           # ... inside the "generated_plan" block, after the button columns ...
 
-           st.caption("It costs me money to manage it your litttle help will help me a lot to donate click on left donate again")             
-
+    # --- DONATION CAPTION AT BOTTOM ---
+    st.caption("It costs me money to manage it your litttle help will help me a lot to donate click on left donate again")
