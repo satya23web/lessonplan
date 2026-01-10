@@ -177,11 +177,12 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             | **Topic** | {topic} | **Duration** | {period} |
             | **TLM** | {tlm} | **Model** | 5E Model |
             
-            **Method:** {methods} | **Strategy:** {strategies}
+            ** Teaching Method:** {methods} 
+            **teaching Strategies:** {strategies}
             
             ---
             
-            ### Objectives:
+            ###  learning Objectives:
             [List Objectives]
             
             ### 5E Process:
@@ -194,8 +195,7 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             | **Evaluate** | [Detail] | [Outcome] |
 
             ---
-            *It costs me money to manage it your litttle help will help me a lot to donate click on left top button to donate*
-            """
+            
         elif model_type == "ICON Model":
             prompt = f"""
             Act as an expert student teacher. Create an ICON Model Lesson Plan based on the EXACT steps below.
@@ -239,8 +239,7 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             | **8. Application**<br>[Teacher gives specific questions to solve... details] | [Specific Outcome] |
 
             ---
-            *It costs me money to manage it your litttle help will help me a lot to donate click on left top button to donate*
-            """
+
         
         try:
             result = try_generate_content(prompt)
