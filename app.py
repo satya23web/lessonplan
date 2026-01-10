@@ -8,7 +8,6 @@ import datetime
 st.set_page_config(page_title="Teacher's Genius Planner", layout="wide")
 
 # 🔴 SECRETS API KEY (For Streamlit Cloud)
-# Make sure you add GOOGLE_API_KEY to your Streamlit Secrets!
 if "GOOGLE_API_KEY" in st.secrets:
     HIDDEN_API_KEY = st.secrets["GOOGLE_API_KEY"]
 else:
@@ -34,7 +33,6 @@ def save_to_history(plan_data):
 def delete_plan(timestamp):
     """Deletes a plan based on its unique timestamp"""
     history = load_history()
-    # Keep only items that DO NOT match the timestamp
     new_history = [item for item in history if item.get("timestamp") != timestamp]
     with open(DB_FILE, "w") as f:
         json.dump(new_history, f, indent=4)
@@ -45,7 +43,7 @@ def try_generate_content(prompt):
         raise Exception("API Key is missing!")
         
     genai.configure(api_key=HIDDEN_API_KEY)
-    model_list = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-pro"]
+    model_list = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-pro"]
     
     last_error = ""
     for model_name in model_list:
@@ -69,7 +67,7 @@ with st.sidebar:
     
     # ❤️ DONATION SECTION
     with st.expander("❤️ Support the Developer", expanded=True):
-        st.markdown("It costs me money to manage it. Your little help will help me a lot.")
+        st.markdown("If it truly saved your time feel free to donate")
         
         # 1. Buy Me A Coffee Button
         st.markdown(
@@ -171,8 +169,17 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             4. "Evaluate" phase must have 3 numbered questions.
             
             **OUTPUT FORMAT:**
-            ## {subject} Lesson Plan #{lp_number}
-            **Topic:** {topic}
+            
+            ### Lesson Plan Identification
+            | **Teacher Name** | {student_name} | **Lesson No** | {lp_number} |
+            | :--- | :--- | :--- | :--- |
+            | **Subject** | {subject} | **Class** | {class_name} |
+            | **Topic** | {topic} | **Duration** | {period} |
+            | **TLM** | {tlm} | **Model** | 5E Model |
+            
+            **Method:** {methods} | **Strategy:** {strategies}
+            
+            ---
             
             ### Objectives:
             [List Objectives]
@@ -196,45 +203,25 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             **CONTEXT:**
             Teacher: {student_name}, LP #{lp_number}, Subject: {subject}, Topic: {topic}.
             Class: {class_name}, Period: {period}, TLM: {tlm}.
+            Method: {methods}, Strategy: {strategies}.
             
             **INSTRUCTIONS:**
             1. Use a MARKDOWN TABLE with 2 columns: "ICON Phase & Activity" on the left, "Learning Outcome" on the right.
             2. **CRITICAL:** Use HTML `<br>` tags for line breaks inside table cells. Do NOT use normal newlines inside the table.
-            3. Follow these exact 8 phases in order:
-
-            **Phase 1: Authentic Observation**
-            - Teacher divides students into two groups.
-            - Provide them with a learning situation (related to {topic}).
-            
-            **Phase 2: Interpretation Construction**
-            - Student teacher assigns activity to each group based on the result/outcome of the learning situation.
-            
-            **Phase 3: Contextualization**
-            - Students relate their observation of the previous learning situation with following aspects of text.
-            - Student teacher guides them and provides hints in case they need it.
-            
-            **Phase 4: Cognitive Apprenticeship**
-            - Student teacher guides the student to alter their observation, interpretation, and conceptualization.
-            - Students re-analyze the concepts they have learned by interpreting new knowledge.
-            - Student teacher asks simple questions to students expressing some real-life scenarios.
-            
-            **Phase 5: Collaboration**
-            - Student teacher divides the entire class into two groups.
-            - Provide them with their respective apparatus and ask them to do their respective activities.
-            
-            **Phase 6: Multiple Interpretation**
-            - Student teacher asks specific questions to each of the groups that are performing the activity and observation.
-            
-            **Phase 7: Multiple Manifestation**
-            - Students summarize the different interpretations about what they have revealed.
-            - Student teacher assists the learners.
-            
-            **Phase 8: Application**
-            - Student teacher gives students specific questions to solve related to the topic.
+            3. Follow these exact 8 phases.
 
             **OUTPUT FORMAT:**
-            ## {subject} Lesson Plan #{lp_number}
-            **Topic:** {topic}
+            
+            ### Lesson Plan Identification
+            | **Teacher Name** | {student_name} | **Lesson No** | {lp_number} |
+            | :--- | :--- | :--- | :--- |
+            | **Subject** | {subject} | **Class** | {class_name} |
+            | **Topic** | {topic} | **Duration** | {period} |
+            | **TLM** | {tlm} | **Model** | ICON Model |
+
+            **Method:** {methods} | **Strategy:** {strategies}
+            
+            ---
             
             ### Outcomes:
             [List Outcomes]
