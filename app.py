@@ -306,4 +306,7 @@ if "generated_plan" in st.session_state:
                         st.rerun()
                     except Exception as e:
                         st.error(f"Refinement failed: {e}")
+           # ... inside the "generated_plan" block, after the button columns ...
+
+           st.caption("It costs me money to manage it your litttle help will help me a lot to donate click on left donate again")             
 
