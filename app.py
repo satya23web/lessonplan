@@ -43,7 +43,7 @@ def try_generate_content(prompt):
         raise Exception("API Key is missing!")
         
     genai.configure(api_key=HIDDEN_API_KEY)
-    model_list = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-pro"]
+    model_list = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-pro"]
     
     last_error = ""
     for model_name in model_list:
@@ -177,12 +177,11 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             | **Topic** | {topic} | **Duration** | {period} |
             | **TLM** | {tlm} | **Model** | 5E Model |
             
-            ** Teaching Method:** {methods} 
-            **teaching Strategies:** {strategies}
+            **Method:** {methods} | **Strategy:** {strategies}
             
             ---
             
-            ###  learning Objectives:
+            ### Objectives:
             [List Objectives]
             
             ### 5E Process:
@@ -195,7 +194,7 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             | **Evaluate** | [Detail] | [Outcome] |
 
             ---
-            
+
         elif model_type == "ICON Model":
             prompt = f"""
             Act as an expert student teacher. Create an ICON Model Lesson Plan based on the EXACT steps below.
