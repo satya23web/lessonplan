@@ -65,7 +65,7 @@ with st.sidebar:
     
     st.markdown("---")
 
-    # 💾 BACKUP BUTTON (Essential for saving history)
+    # 💾 BACKUP BUTTON
     st.subheader("💾 Backup Data")
     if os.path.exists(DB_FILE):
         with open(DB_FILE, "r") as f:
@@ -168,7 +168,7 @@ if model_type == "UDL Model (Coming Soon)":
 if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
     with st.spinner("Writing detailed plan..."):
         
-        # 🔗 YOUR REFERRAL LINK (Updated based on your paste)
+        # 🔗 YOUR REFERRAL LINK
         navi_link = "https://r.navi.com/ft4geB" 
         
         # --- PROMPTS ---
@@ -189,9 +189,10 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             
             **OUTPUT FORMAT:**
             
-            ### Lesson Plan Identification
-            | **Teacher Name** | {student_name} | **Lesson No** | {lp_number} |
+            **Lesson Plan Identification**
+            | | | | |
             | :--- | :--- | :--- | :--- |
+            | **Teacher** | {student_name} | **Lesson No** | {lp_number} |
             | **Subject** | {subject} | **Class** | {class_name} |
             | **Topic** | {topic} | **Duration** | {period} |
             | **TLM** | {tlm} | **Model** | 5E Model |
@@ -199,7 +200,7 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             **Method:** {methods} | **Strategy:** {strategies}
 
             ---
-            ### 🎁 **Special Offer for Teachers**
+            **🎁 Special Offer for Teachers**
             Get **tons of cashback** directly to your bank account! Download the **Navi App** using the link below:
             👉 [**Click Here to Download Navi & Claim Cashback**]({navi_link})
             *(Safe, secure UPI app trusted by millions)*
@@ -236,9 +237,10 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
 
             **OUTPUT FORMAT:**
             
-            ### Lesson Plan Identification
-            | **Teacher Name** | {student_name} | **Lesson No** | {lp_number} |
+            **Lesson Plan Identification**
+            | | | | |
             | :--- | :--- | :--- | :--- |
+            | **Teacher** | {student_name} | **Lesson No** | {lp_number} |
             | **Subject** | {subject} | **Class** | {class_name} |
             | **Topic** | {topic} | **Duration** | {period} |
             | **TLM** | {tlm} | **Model** | ICON Model |
@@ -246,7 +248,7 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             **Method:** {methods} | **Strategy:** {strategies}
             
             ---
-            ### 🎁 **Special Offer for Teachers**
+            **🎁 Special Offer for Teachers**
             Get **tons of cashback** directly to your bank account! Download the **Navi App** using the link below:
             👉 [**Click Here to Download Navi & Claim Cashback**]({navi_link})
             *(Safe, secure UPI app trusted by millions)*
@@ -291,8 +293,7 @@ if "generated_plan" in st.session_state:
     st.markdown("---")
     st.success("✅ Plan Generated Successfully!")
     
-    # 1. DISPLAY PLAN (Using MARKDOWN with HTML support for tables)
-    # The 'unsafe_allow_html' is critical here to render <br> tags in tables
+    # 1. DISPLAY PLAN
     st.markdown(st.session_state.generated_plan, unsafe_allow_html=True)
     
     # 2. CUSTOMIZATION TOOL
@@ -310,7 +311,6 @@ if "generated_plan" in st.session_state:
                 st.warning("Please type an instruction.")
             else:
                 with st.spinner("Refining..."):
-                    # UPDATED PROMPT TO PROTECT REFERRAL LINK AND TABLES
                     refine_prompt = f"""
                     Here is the current lesson plan (which may include a Special Offer section):
                     {st.session_state.generated_plan}
@@ -321,7 +321,7 @@ if "generated_plan" in st.session_state:
                     RULES:
                     1. **Keep the "Lesson Plan Identification" table at the top.**
                     2. **Keep the "Special Offer for Teachers" section exactly as it is.**
-                    3. Maintain the Markdown Table format for the lesson phases (use <br> for breaks).
+                    3. Maintain the Markdown Table format for the lesson phases.
                     4. Output the full plan.
                     """
                     try:
@@ -331,5 +331,3 @@ if "generated_plan" in st.session_state:
                     except Exception as e:
                         st.error(f"Refinement failed: {e}")
 
-    # --- DONATION CAPTION AT BOTTOM ---
-    st.caption("It costs me money to manage it your litttle help will help me a lot to donate click on left donate again")
