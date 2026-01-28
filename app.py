@@ -43,7 +43,7 @@ def try_generate_content(prompt):
         raise Exception("API Key is missing!")
         
     genai.configure(api_key=HIDDEN_API_KEY)
-    model_list = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-pro"]
+    model_list = ["gemini-2.5-flash", "gemini-pro"]
     
     last_error = ""
     for model_name in model_list:
@@ -152,6 +152,9 @@ if model_type == "UDL Model (Coming Soon)":
 if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
     with st.spinner("Writing detailed plan..."):
         
+        # 🔗 EDIT YOUR REFERRAL LINK HERE 🔗
+        navi_link = "https://g.navi.com/your-referral-code" 
+        
         # --- PROMPTS ---
         if model_type == "5E Model":
             prompt = f"""
@@ -177,9 +180,13 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             | **Topic** | {topic} | **Duration** | {period} |
             | **TLM** | {tlm} | **Model** | 5E Model |
             
-            ###**Method:** {methods} 
-            ###**Strategy:** {strategies}
-            
+            **Method:** {methods} | **Strategy:** {strategies}
+
+            ---
+            ### 🎁 **Special Offer for Teachers**
+            Get **tons of cashback** directly to your bank account! Download the **Navi App** using the link below:
+            👉 [**Click Here to Download Navi & Claim Cashback**]({navi_link})
+            *(Safe, secure UPI app trusted by millions)*
             ---
             
             ### Objectives:
@@ -195,7 +202,7 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             | **Evaluate** | [Detail] | [Outcome] |
 
             ---
-            
+            *It costs me money to manage it your litttle help will help me a lot to donate click on left top button to donate*
             """
         elif model_type == "ICON Model":
             prompt = f"""
@@ -223,6 +230,11 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             **Method:** {methods} | **Strategy:** {strategies}
             
             ---
+            ### 🎁 **Special Offer for Teachers**
+            Get **tons of cashback** directly to your bank account! Download the **Navi App** using the link below:
+            👉 [**Click Here to Download Navi & Claim Cashback**]({})
+            *(Safe, secure UPI app trusted by millions)*
+            ---
             
             ### Outcomes:
             [List Outcomes]
@@ -240,7 +252,7 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             | **8. Application**<br>[Teacher gives specific questions to solve... details] | [Specific Outcome] |
 
             ---
-
+            *It costs me money to manage it your litttle help will help me a lot to donate click on left top button to donate*
             """
         
         try:
@@ -263,8 +275,7 @@ if "generated_plan" in st.session_state:
     st.markdown("---")
     st.success("✅ Plan Generated Successfully!")
     
-    # 1. DISPLAY PLAN (Forcing HTML interpretation for tables)
-    # The 'unsafe_allow_html' is critical here to render <br> tags in tables
+    # 1. DISPLAY PLAN (Using MARKDOWN with HTML support for tables)
     st.markdown(st.session_state.generated_plan, unsafe_allow_html=True)
     
     # 2. CUSTOMIZATION TOOL
@@ -282,14 +293,19 @@ if "generated_plan" in st.session_state:
                 st.warning("Please type an instruction.")
             else:
                 with st.spinner("Refining..."):
+                    # UPDATED PROMPT TO PROTECT REFERRAL LINK AND TABLES
                     refine_prompt = f"""
-                    Here is a lesson plan:
+                    Here is the current lesson plan (which may include a Special Offer section):
                     {st.session_state.generated_plan}
                     
                     USER INSTRUCTION: {refine_instruction}
                     
-                    TASK: Rewrite the plan to incorporate the instruction. 
-                    Keep the exact same Markdown Table format. Ensure you use `<br>` for line breaks inside the table.
+                    TASK: Update the plan based on the instruction.
+                    RULES:
+                    1. **Keep the "Lesson Plan Identification" table at the top.**
+                    2. **Keep the "Special Offer for Teachers" section exactly as it is.**
+                    3. Maintain the Markdown Table format for the lesson phases (use <br> for breaks).
+                    4. Output the full plan.
                     """
                     try:
                         new_result = try_generate_content(refine_prompt)
@@ -298,5 +314,3 @@ if "generated_plan" in st.session_state:
                     except Exception as e:
                         st.error(f"Refinement failed: {e}")
 
-    # --- DONATION CAPTION AT BOTTOM ---
-    st.caption("It costs me money to manage it your litttle help will help me a lot to donate click on left donate again")
