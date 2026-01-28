@@ -43,7 +43,7 @@ def try_generate_content(prompt):
         raise Exception("API Key is missing!")
         
     genai.configure(api_key=HIDDEN_API_KEY)
-    model_list = ["gemini-2.5-flash", "gemini-pro"]
+    model_list = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-pro"]
     
     last_error = ""
     for model_name in model_list:
@@ -63,6 +63,22 @@ with st.sidebar:
     if HIDDEN_API_KEY:
         st.success("✅ API System: Active")
     
+    st.markdown("---")
+
+    # 💾 BACKUP BUTTON (Essential for saving history)
+    st.subheader("💾 Backup Data")
+    if os.path.exists(DB_FILE):
+        with open(DB_FILE, "r") as f:
+            st.download_button(
+                label="📥 Download History File",
+                data=f,
+                file_name="lesson_history.json",
+                mime="application/json",
+                help="Download this file and upload it to GitHub to save your history permanently."
+            )
+    else:
+        st.caption("No history to backup yet.")
+
     st.markdown("---")
     
     # ❤️ DONATION SECTION
@@ -152,8 +168,8 @@ if model_type == "UDL Model (Coming Soon)":
 if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
     with st.spinner("Writing detailed plan..."):
         
-        # 🔗 EDIT YOUR REFERRAL LINK HERE 🔗
-        navi_link = "https://g.navi.com/your-referral-code" 
+        # 🔗 YOUR REFERRAL LINK (Updated based on your paste)
+        navi_link = "https://r.navi.com/ft4geB" 
         
         # --- PROMPTS ---
         if model_type == "5E Model":
@@ -232,7 +248,7 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             ---
             ### 🎁 **Special Offer for Teachers**
             Get **tons of cashback** directly to your bank account! Download the **Navi App** using the link below:
-            👉 [**Click Here to Download Navi & Claim Cashback**]({})
+            👉 [**Click Here to Download Navi & Claim Cashback**]({navi_link})
             *(Safe, secure UPI app trusted by millions)*
             ---
             
@@ -276,6 +292,7 @@ if "generated_plan" in st.session_state:
     st.success("✅ Plan Generated Successfully!")
     
     # 1. DISPLAY PLAN (Using MARKDOWN with HTML support for tables)
+    # The 'unsafe_allow_html' is critical here to render <br> tags in tables
     st.markdown(st.session_state.generated_plan, unsafe_allow_html=True)
     
     # 2. CUSTOMIZATION TOOL
@@ -314,3 +331,5 @@ if "generated_plan" in st.session_state:
                     except Exception as e:
                         st.error(f"Refinement failed: {e}")
 
+    # --- DONATION CAPTION AT BOTTOM ---
+    st.caption("It costs me money to manage it your litttle help will help me a lot to donate click on left donate again")
