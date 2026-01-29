@@ -164,12 +164,12 @@ if model_type == "UDL Model (Coming Soon)":
     st.info("🚧 **UDL Model is currently under development.** Please check back later for updates!")
     st.stop()
 
+# 🔗 YOUR REFERRAL LINK
+navi_link = "https://r.navi.com/ft4geB" 
+
 # --- GENERATE BUTTON ---
 if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
     with st.spinner("Writing detailed plan..."):
-        
-        # 🔗 YOUR REFERRAL LINK
-        navi_link = "https://r.navi.com/ft4geB" 
         
         # --- PROMPTS ---
         if model_type == "5E Model":
@@ -200,10 +200,10 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             **Method:** {methods} | **Strategy:** {strategies}
 
             ---
-            **🎁 Special Offer for Teachers**
-            Get **tons of cashback** directly to your bank account! Download the **Navi App** using the link below:
-            👉 [**Click Here to Download Navi & Claim Cashback**]({navi_link})
-            *(Safe, secure UPI app trusted by millions)*
+            🎁 Special Offer for Teachers
+            Get tons of cashback** directly to your bank account! Download the Navi App using the link below:
+            👉 [Click Here to Download Navi & Claim Cashback]({navi_link})
+            (Safe, secure UPI app trusted by millions)
             ---
             
             ### Objectives:
@@ -311,18 +311,43 @@ if "generated_plan" in st.session_state:
                 st.warning("Please type an instruction.")
             else:
                 with st.spinner("Refining..."):
+                    # UPDATED ROBUST REFINEMENT PROMPT
+                    # This ensures the Top Table and Referral Link stay PERFECT during updates.
                     refine_prompt = f"""
-                    Here is the current lesson plan (which may include a Special Offer section):
+                    Act as an expert teacher. Update the lesson plan below based on the user's request.
+                    
+                    **CURRENT PLAN:**
                     {st.session_state.generated_plan}
                     
-                    USER INSTRUCTION: {refine_instruction}
+                    **USER REQUEST:** {refine_instruction}
                     
-                    TASK: Update the plan based on the instruction.
-                    RULES:
-                    1. **Keep the "Lesson Plan Identification" table at the top.**
-                    2. **Keep the "Special Offer for Teachers" section exactly as it is.**
-                    3. Maintain the Markdown Table format for the lesson phases.
-                    4. Output the full plan.
+                    **STRICT OUTPUT FORMAT (YOU MUST FOLLOW THIS EXACTLY):**
+                    
+                    1. **TOP SECTION (Identification Table):**
+                       **Lesson Plan Identification**
+                       | | | | |
+                       | :--- | :--- | :--- | :--- |
+                       | **Teacher** | {student_name} | **Lesson No** | {lp_number} |
+                       | **Subject** | {subject} | **Class** | {class_name} |
+                       | **Topic** | {topic} | **Duration** | {period} |
+                       | **TLM** | {tlm} | **Model** | {model_type} |
+                       
+                       **Method:** {methods} | **Strategy:** {strategies}
+                    
+                    2. **REFERRAL SECTION (Keep exactly this format):**
+                       ---
+                       **🎁 Special Offer for Teachers**
+                       Get **tons of cashback** directly to your bank account! Download the **Navi App** using the link below:
+                       👉 [**Click Here to Download Navi & Claim Cashback**]({navi_link})
+                       *(Safe, secure UPI app trusted by millions)*
+                       ---
+                    
+                    3. **CONTENT SECTION:**
+                       - Rewrite the Objectives and Phases based on the User Request.
+                       - Use a clean MARKDOWN TABLE for the phases (Engage, Explore, etc.).
+                       - Use HTML `<br>` for line breaks inside the table.
+                       
+                    **GENERATE THE FULL PLAN:**
                     """
                     try:
                         new_result = try_generate_content(refine_prompt)
