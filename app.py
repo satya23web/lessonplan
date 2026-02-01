@@ -305,7 +305,7 @@ if "generated_plan" in st.session_state:
     
     col_ref1, col_ref2 = st.columns([4, 1])
     with col_ref1:
-        refine_instruction = st.text_input("Instruction", placeholder="e.g., Change the Explore activity to use a YouTube video instead.")
+        refine_instruction = st.text_input("Instruction", placeholder="e.g., Add 5 more questions to Evaluate phase.")
     with col_ref2:
         st.write("") 
         st.write("") 
@@ -346,8 +346,9 @@ if "generated_plan" in st.session_state:
                     
                     3. **CONTENT SECTION:**
                        - Start Objectives with: "After this lesson, students will be able to:"
-                       - Rewrite the Objectives and Phases based on the User Request.
-                       - Use a clean MARKDOWN TABLE for the phases.
+                       - **CRITICAL:** Maintain the **exact same table columns** as the Current Plan.
+                       - **NEVER remove the 'Learning Outcome' column.**
+                       - If adding questions (e.g. to Evaluate), list them inside the 'Activity' column.
                        - Use HTML `<br>` for line breaks inside the table.
                        
                     **GENERATE THE FULL PLAN:**
@@ -359,3 +360,4 @@ if "generated_plan" in st.session_state:
                     except Exception as e:
                         st.error(f"Refinement failed: {e}")
 
+    
