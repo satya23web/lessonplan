@@ -4,9 +4,9 @@ import json
 import os
 import datetime
 
-# --- CONFIGURATION (Mobile Friendly) ---
-# Changed layout to 'centered' for a better mobile app experience
-st.set_page_config(page_title="Teacher's Genius Planner", layout="centered")
+# --- CONFIGURATION ---
+# Restored to 'wide' layout so tables don't get squished
+st.set_page_config(page_title="Teacher's Genius Planner", layout="wide")
 
 # 🔴 SECRETS API KEY (For Streamlit Cloud)
 if "GOOGLE_API_KEY" in st.secrets:
@@ -135,29 +135,26 @@ with st.sidebar:
                         st.rerun()
 
 # --- MAIN APP ---
-st.title("🍎 Teacher's Genius Planner")
-st.markdown("Create professional lesson plans in seconds.")
+st.title("🍎 Professional Lesson Plan Generator")
 
-# --- MOBILE FRIENDLY INPUTS ---
-# Main Topic Input (Full Width)
-topic = st.text_input("📌 Topic", "Photosynthesis", help="What are you teaching today?")
-
-# 2-Column Layout for Essentials
-col1, col2 = st.columns(2)
-
+# INPUTS
+col1, col2, col3 = st.columns(3)
 with col1:
-    subject = st.text_input("Subject", "Science")
-    class_name = st.text_input("Class", "Class 8")
-    model_type = st.selectbox("Model", ["5E Model", "ICON Model", "UDL Model (Coming Soon)"])
-
-with col2:
     student_name = st.text_input("Teacher Name", "Your Name")
-    lp_number = st.text_input("Lesson Plan No.", "01")
-    period = st.text_input("Period Duration", "40 mins")
+    subject = st.text_input("Subject", "Science")
+with col2:
+    class_name = st.text_input("Class", "Class 8")
+    topic = st.text_input("Topic", "Photosynthesis")
+with col3:
+    lp_number = st.text_input("Lesson Plan Number", "01")
+    period = st.text_input("Period", "40 mins")
 
-# Expander for Advanced details (Keeps mobile view clean)
-with st.expander("🛠️ Advanced Settings (Methods & Materials)", expanded=False):
+col4, col5 = st.columns(2)
+with col4:
     tlm = st.text_input("TLM Materials", "Charts, Flashcards")
+    # Added UDL Model (Coming Soon) option
+    model_type = st.selectbox("Model", ["5E Model", "ICON Model", "UDL Model (Coming Soon)"])
+with col5:
     methods = st.text_input("Method", "Constructivist Approach")
     strategies = st.text_input("Strategy", "Collaborative Learning")
 
@@ -172,8 +169,7 @@ if model_type == "UDL Model (Coming Soon)":
 navi_link = "https://r.navi.com/ft4geB" 
 
 # --- GENERATE BUTTON ---
-# Using full column width for button on mobile
-if st.button(f"🚀 Generate Lesson Plan", type="primary", use_container_width=True):
+if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary", use_container_width=True):
     with st.spinner("Writing detailed plan..."):
         
         # --- PROMPTS ---
@@ -212,6 +208,7 @@ if st.button(f"🚀 Generate Lesson Plan", type="primary", use_container_width=T
             ---
             
             ### Objectives:
+            After this lesson, students will be able to:
             [List Objectives]
             
             ### 5E Process:
@@ -260,6 +257,7 @@ if st.button(f"🚀 Generate Lesson Plan", type="primary", use_container_width=T
             ---
             
             ### Outcomes:
+            After this lesson, students will be able to:
             [List Outcomes]
             
             ### ICON Process:
@@ -347,8 +345,9 @@ if "generated_plan" in st.session_state:
                        ---
                     
                     3. **CONTENT SECTION:**
+                       - Start Objectives with: "After this lesson, students will be able to:"
                        - Rewrite the Objectives and Phases based on the User Request.
-                       - Use a clean MARKDOWN TABLE for the phases (Engage, Explore, etc.).
+                       - Use a clean MARKDOWN TABLE for the phases.
                        - Use HTML `<br>` for line breaks inside the table.
                        
                     **GENERATE THE FULL PLAN:**
@@ -360,4 +359,3 @@ if "generated_plan" in st.session_state:
                     except Exception as e:
                         st.error(f"Refinement failed: {e}")
 
-    
