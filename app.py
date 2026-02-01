@@ -4,8 +4,9 @@ import json
 import os
 import datetime
 
-# --- CONFIGURATION ---
-st.set_page_config(page_title="Teacher's Genius Planner", layout="wide")
+# --- CONFIGURATION (Mobile Friendly) ---
+# Changed layout to 'centered' for a better mobile app experience
+st.set_page_config(page_title="Teacher's Genius Planner", layout="centered")
 
 # 🔴 SECRETS API KEY (For Streamlit Cloud)
 if "GOOGLE_API_KEY" in st.secrets:
@@ -134,26 +135,29 @@ with st.sidebar:
                         st.rerun()
 
 # --- MAIN APP ---
-st.title("🍎 Professional Lesson Plan Generator")
+st.title("🍎 Teacher's Genius Planner")
+st.markdown("Create professional lesson plans in seconds.")
 
-# INPUTS
-col1, col2, col3 = st.columns(3)
+# --- MOBILE FRIENDLY INPUTS ---
+# Main Topic Input (Full Width)
+topic = st.text_input("📌 Topic", "Photosynthesis", help="What are you teaching today?")
+
+# 2-Column Layout for Essentials
+col1, col2 = st.columns(2)
+
 with col1:
-    student_name = st.text_input("Teacher Name", "Your Name")
     subject = st.text_input("Subject", "Science")
-with col2:
     class_name = st.text_input("Class", "Class 8")
-    topic = st.text_input("Topic", "Photosynthesis")
-with col3:
-    lp_number = st.text_input("Lesson Plan Number", "01")
-    period = st.text_input("Period", "40 mins")
-
-col4, col5 = st.columns(2)
-with col4:
-    tlm = st.text_input("TLM Materials", "Charts, Flashcards")
-    # Added UDL Model (Coming Soon) option
     model_type = st.selectbox("Model", ["5E Model", "ICON Model", "UDL Model (Coming Soon)"])
-with col5:
+
+with col2:
+    student_name = st.text_input("Teacher Name", "Your Name")
+    lp_number = st.text_input("Lesson Plan No.", "01")
+    period = st.text_input("Period Duration", "40 mins")
+
+# Expander for Advanced details (Keeps mobile view clean)
+with st.expander("🛠️ Advanced Settings (Methods & Materials)", expanded=False):
+    tlm = st.text_input("TLM Materials", "Charts, Flashcards")
     methods = st.text_input("Method", "Constructivist Approach")
     strategies = st.text_input("Strategy", "Collaborative Learning")
 
@@ -168,7 +172,8 @@ if model_type == "UDL Model (Coming Soon)":
 navi_link = "https://r.navi.com/ft4geB" 
 
 # --- GENERATE BUTTON ---
-if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
+# Using full column width for button on mobile
+if st.button(f"🚀 Generate Lesson Plan", type="primary", use_container_width=True):
     with st.spinner("Writing detailed plan..."):
         
         # --- PROMPTS ---
@@ -200,10 +205,10 @@ if st.button(f"🚀 Generate {subject} Plan #{lp_number}", type="primary"):
             **Method:** {methods} | **Strategy:** {strategies}
 
             ---
-            🎁 Special Offer for Teachers
-            Get tons of cashback** directly to your bank account! Download the Navi App using the link below:
-            👉 [Click Here to Download Navi & Claim Cashback]({navi_link})
-            (Safe, secure UPI app trusted by millions)
+            **🎁 Special Offer for Teachers**
+            Get **tons of cashback** directly to your bank account! Download the **Navi App** using the link below:
+            👉 [**Click Here to Download Navi & Claim Cashback**]({navi_link})
+            *(Safe, secure UPI app trusted by millions)*
             ---
             
             ### Objectives:
@@ -306,13 +311,12 @@ if "generated_plan" in st.session_state:
     with col_ref2:
         st.write("") 
         st.write("") 
-        if st.button("✨ Update Plan"):
+        if st.button("✨ Update Plan", use_container_width=True):
             if not refine_instruction:
                 st.warning("Please type an instruction.")
             else:
                 with st.spinner("Refining..."):
                     # UPDATED ROBUST REFINEMENT PROMPT
-                    # This ensures the Top Table and Referral Link stay PERFECT during updates.
                     refine_prompt = f"""
                     Act as an expert teacher. Update the lesson plan below based on the user's request.
                     
@@ -356,3 +360,4 @@ if "generated_plan" in st.session_state:
                     except Exception as e:
                         st.error(f"Refinement failed: {e}")
 
+    
